@@ -15,6 +15,9 @@ install:
   - glide install
 
 script:
-  - golint ./...
+  - golint `go list ./... | grep -v /vendor/`
   - go test
   - go build
+
+notifications:
+  email: false
