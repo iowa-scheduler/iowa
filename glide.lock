@@ -1,0 +1,59 @@
+hash: 7c725f4a350340f258ebfe605b5f8d1c75e98b60c39347a997dec5e490106921
+updated: 2018-01-17T03:47:22.236799+08:00
+imports:
+- name: github.com/golang/protobuf
+  version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
+  subpackages:
+  - proto
+  - protoc-gen-go
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
+- name: golang.org/x/net
+  version: 5ccada7d0a7ba9aeb5d3aca8d3501b4c2a509fec
+  subpackages:
+  - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: golang.org/x/text
+  version: e19ae1496984b1c655b8044a65c0300a3c878dd3
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: a8101f21cf983e773d0c1133ebc5424792003214
+  subpackages:
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: 7cea4cc846bcf00cbb27595b07da5de875ef7de9
+  repo: https://github.com/grpc/grpc-go
+  subpackages:
+  - balancer
+  - balancer/base
+  - balancer/roundrobin
+  - codes
+  - connectivity
+  - credentials
+  - encoding
+  - grpclb/grpc_lb_v1/messages
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - resolver
+  - resolver/dns
+  - resolver/passthrough
+  - stats
+  - status
+  - tap
+  - transport
+testImports: []
