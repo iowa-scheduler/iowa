@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// protoc --go_out=plugins=grpc:. proto/*.proto
+package proto;
+
+service Message {
+  rpc Auth (AuthRequest) returns (AuthResponse);
+  rpc Done (Task) returns (Empty);
+  rpc Register (Empty) returns (stream Task);
+}
+
+message AuthRequest {
+  string name = 1;
+}
+
+message AuthResponse {
+  string id = 1;
+  string token = 2;
+}
+
+message Empty {}
+
+message Task {
+  string id = 1;
+  string name = 2;
+  string data = 3;
+}
