@@ -11,13 +11,22 @@ before_install:
   - export PATH="$HOME/bin:$PATH"
 
 install:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
   - go get -u github.com/golang/lint/golint
+  - go get github.com/axw/gocov/gocov
   - glide install
+
+before_script:
+  - ./cc-test-reporter before-build
 
 script:
   - golint `go list ./... | grep -v /vendor/`
-  - go test
+  - gocov test > coverage.json
   - go build
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 notifications:
   email: false
