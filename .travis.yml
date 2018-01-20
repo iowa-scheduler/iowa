@@ -22,12 +22,17 @@ before_script:
 
 script:
   - golint `go list ./... | grep -v /vendor/`
-  - gocov test > coverage.json
+  - |
+    for pkg in $(go list ./... | grep -v vendor); do
+        go test -coverprofile=$(echo $pkg | tr / -).cover $pkg
+    done
+    'echo "mode: set" > c.out'
+    grep -h -v "^mode:" ./*.cover >> c.out
+    rm -f *.cover
   - go build
 
 after_script:
-  - ./cc-test-reporter format-coverage --input-type gocov coverage.json
-  - ./cc-test-reporter upload-coverage
+  - ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
 
 notifications:
   email: false
