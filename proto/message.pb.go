@@ -13,7 +13,8 @@ It has these top-level messages:
 	AuthRequest
 	AuthResponse
 	Empty
-	Task
+	TaskDone
+	TaskPublish
 */
 package proto
 
@@ -38,7 +39,8 @@ var _ = math.Inf
 const _ = proto1.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type AuthRequest struct {
-	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Name  string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Token string `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
 }
 
 func (m *AuthRequest) Reset()                    { *m = AuthRequest{} }
@@ -53,22 +55,21 @@ func (m *AuthRequest) GetName() string {
 	return ""
 }
 
+func (m *AuthRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
 type AuthResponse struct {
-	Id    string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	Token string `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
+	Token string `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
 }
 
 func (m *AuthResponse) Reset()                    { *m = AuthResponse{} }
 func (m *AuthResponse) String() string            { return proto1.CompactTextString(m) }
 func (*AuthResponse) ProtoMessage()               {}
 func (*AuthResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
-
-func (m *AuthResponse) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
 
 func (m *AuthResponse) GetToken() string {
 	if m != nil {
@@ -85,43 +86,100 @@ func (m *Empty) String() string            { return proto1.CompactTextString(m) 
 func (*Empty) ProtoMessage()               {}
 func (*Empty) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-type Task struct {
+type TaskDone struct {
 	Id   string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
 	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Time string `protobuf:"bytes,4,opt,name=time" json:"time,omitempty"`
 }
 
-func (m *Task) Reset()                    { *m = Task{} }
-func (m *Task) String() string            { return proto1.CompactTextString(m) }
-func (*Task) ProtoMessage()               {}
-func (*Task) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (m *TaskDone) Reset()                    { *m = TaskDone{} }
+func (m *TaskDone) String() string            { return proto1.CompactTextString(m) }
+func (*TaskDone) ProtoMessage()               {}
+func (*TaskDone) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
-func (m *Task) GetId() string {
+func (m *TaskDone) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *Task) GetName() string {
+func (m *TaskDone) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *Task) GetData() string {
+func (m *TaskDone) GetData() string {
 	if m != nil {
 		return m.Data
 	}
 	return ""
 }
 
+func (m *TaskDone) GetTime() string {
+	if m != nil {
+		return m.Time
+	}
+	return ""
+}
+
+type TaskPublish struct {
+	Id   string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Time string `protobuf:"bytes,4,opt,name=time" json:"time,omitempty"`
+	Ttl  uint32 `protobuf:"varint,5,opt,name=ttl" json:"ttl,omitempty"`
+}
+
+func (m *TaskPublish) Reset()                    { *m = TaskPublish{} }
+func (m *TaskPublish) String() string            { return proto1.CompactTextString(m) }
+func (*TaskPublish) ProtoMessage()               {}
+func (*TaskPublish) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+
+func (m *TaskPublish) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *TaskPublish) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *TaskPublish) GetData() string {
+	if m != nil {
+		return m.Data
+	}
+	return ""
+}
+
+func (m *TaskPublish) GetTime() string {
+	if m != nil {
+		return m.Time
+	}
+	return ""
+}
+
+func (m *TaskPublish) GetTtl() uint32 {
+	if m != nil {
+		return m.Ttl
+	}
+	return 0
+}
+
 func init() {
 	proto1.RegisterType((*AuthRequest)(nil), "proto.AuthRequest")
 	proto1.RegisterType((*AuthResponse)(nil), "proto.AuthResponse")
 	proto1.RegisterType((*Empty)(nil), "proto.Empty")
-	proto1.RegisterType((*Task)(nil), "proto.Task")
+	proto1.RegisterType((*TaskDone)(nil), "proto.TaskDone")
+	proto1.RegisterType((*TaskPublish)(nil), "proto.TaskPublish")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -136,8 +194,8 @@ const _ = grpc.SupportPackageIsVersion4
 
 type MessageClient interface {
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	Done(ctx context.Context, in *Task, opts ...grpc.CallOption) (*Empty, error)
-	Register(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Message_RegisterClient, error)
+	Done(ctx context.Context, in *TaskDone, opts ...grpc.CallOption) (*Empty, error)
+	Register(ctx context.Context, opts ...grpc.CallOption) (Message_RegisterClient, error)
 }
 
 type messageClient struct {
@@ -157,7 +215,7 @@ func (c *messageClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.
 	return out, nil
 }
 
-func (c *messageClient) Done(ctx context.Context, in *Task, opts ...grpc.CallOption) (*Empty, error) {
+func (c *messageClient) Done(ctx context.Context, in *TaskDone, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := grpc.Invoke(ctx, "/proto.Message/Done", in, out, c.cc, opts...)
 	if err != nil {
@@ -166,23 +224,18 @@ func (c *messageClient) Done(ctx context.Context, in *Task, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *messageClient) Register(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Message_RegisterClient, error) {
+func (c *messageClient) Register(ctx context.Context, opts ...grpc.CallOption) (Message_RegisterClient, error) {
 	stream, err := grpc.NewClientStream(ctx, &_Message_serviceDesc.Streams[0], c.cc, "/proto.Message/Register", opts...)
 	if err != nil {
 		return nil, err
 	}
 	x := &messageRegisterClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
 	return x, nil
 }
 
 type Message_RegisterClient interface {
-	Recv() (*Task, error)
+	Send(*Empty) error
+	Recv() (*TaskPublish, error)
 	grpc.ClientStream
 }
 
@@ -190,8 +243,12 @@ type messageRegisterClient struct {
 	grpc.ClientStream
 }
 
-func (x *messageRegisterClient) Recv() (*Task, error) {
-	m := new(Task)
+func (x *messageRegisterClient) Send(m *Empty) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *messageRegisterClient) Recv() (*TaskPublish, error) {
+	m := new(TaskPublish)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -202,8 +259,8 @@ func (x *messageRegisterClient) Recv() (*Task, error) {
 
 type MessageServer interface {
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
-	Done(context.Context, *Task) (*Empty, error)
-	Register(*Empty, Message_RegisterServer) error
+	Done(context.Context, *TaskDone) (*Empty, error)
+	Register(Message_RegisterServer) error
 }
 
 func RegisterMessageServer(s *grpc.Server, srv MessageServer) {
@@ -229,7 +286,7 @@ func _Message_Auth_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Message_Done_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Task)
+	in := new(TaskDone)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -241,21 +298,18 @@ func _Message_Done_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/proto.Message/Done",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServer).Done(ctx, req.(*Task))
+		return srv.(MessageServer).Done(ctx, req.(*TaskDone))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Message_Register_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(Empty)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(MessageServer).Register(m, &messageRegisterServer{stream})
+	return srv.(MessageServer).Register(&messageRegisterServer{stream})
 }
 
 type Message_RegisterServer interface {
-	Send(*Task) error
+	Send(*TaskPublish) error
+	Recv() (*Empty, error)
 	grpc.ServerStream
 }
 
@@ -263,8 +317,16 @@ type messageRegisterServer struct {
 	grpc.ServerStream
 }
 
-func (x *messageRegisterServer) Send(m *Task) error {
+func (x *messageRegisterServer) Send(m *TaskPublish) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func (x *messageRegisterServer) Recv() (*Empty, error) {
+	m := new(Empty)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 var _Message_serviceDesc = grpc.ServiceDesc{
@@ -285,6 +347,7 @@ var _Message_serviceDesc = grpc.ServiceDesc{
 			StreamName:    "Register",
 			Handler:       _Message_Register_Handler,
 			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "proto/message.proto",
@@ -293,19 +356,22 @@ var _Message_serviceDesc = grpc.ServiceDesc{
 func init() { proto1.RegisterFile("proto/message.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 221 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x8f, 0xbf, 0x4e, 0xc4, 0x30,
-	0x0c, 0x87, 0x95, 0x90, 0x72, 0xe0, 0x3b, 0x31, 0xf8, 0x18, 0xaa, 0x4e, 0x34, 0x0b, 0x4c, 0x2d,
-	0x02, 0x66, 0x24, 0x24, 0x18, 0x59, 0x2a, 0x5e, 0x20, 0xa8, 0x56, 0xa9, 0xaa, 0x26, 0xa5, 0x49,
-	0x07, 0x5e, 0x80, 0xe7, 0x46, 0xf9, 0x83, 0x68, 0xc5, 0x14, 0xff, 0x3e, 0xdb, 0xf2, 0x17, 0x38,
-	0x4e, 0xb3, 0x71, 0xa6, 0x1e, 0xc9, 0x5a, 0xd5, 0x51, 0x15, 0x12, 0x66, 0xe1, 0x91, 0x25, 0xec,
-	0x9f, 0x16, 0xf7, 0xd1, 0xd0, 0xe7, 0x42, 0xd6, 0x21, 0x82, 0xd0, 0x6a, 0xa4, 0x9c, 0x5d, 0xb1,
-	0x9b, 0xf3, 0x26, 0xd4, 0xf2, 0x01, 0x0e, 0x71, 0xc4, 0x4e, 0x46, 0x5b, 0xc2, 0x0b, 0xe0, 0x7d,
-	0x9b, 0x26, 0x78, 0xdf, 0xe2, 0x25, 0x64, 0xce, 0x0c, 0xa4, 0x73, 0x1e, 0x50, 0x0c, 0x72, 0x07,
-	0xd9, 0xcb, 0x38, 0xb9, 0x2f, 0xf9, 0x08, 0xe2, 0x4d, 0xd9, 0xe1, 0xdf, 0xda, 0xef, 0x29, 0xfe,
-	0x77, 0xca, 0xb3, 0x56, 0x39, 0x95, 0x9f, 0x44, 0xe6, 0xeb, 0xbb, 0x6f, 0x06, 0xbb, 0xd7, 0xa8,
-	0x8e, 0x35, 0x08, 0xaf, 0x82, 0x18, 0x3f, 0x51, 0xad, 0xd4, 0x8b, 0xe3, 0x86, 0x25, 0xd7, 0x12,
-	0xc4, 0xb3, 0xd1, 0x84, 0xfb, 0xd4, 0xf4, 0x26, 0xc5, 0x21, 0x85, 0xe0, 0x87, 0xd7, 0x70, 0xd6,
-	0x50, 0xd7, 0x5b, 0x47, 0x33, 0x6e, 0x3a, 0xc5, 0x7a, 0xe9, 0x96, 0xbd, 0x9f, 0x86, 0x74, 0xff,
-	0x13, 0x00, 0x00, 0xff, 0xff, 0x02, 0x12, 0x0a, 0x13, 0x4f, 0x01, 0x00, 0x00,
+	// 265 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x90, 0x4b, 0x4b, 0xc3, 0x40,
+	0x14, 0x85, 0x99, 0x34, 0xb1, 0xf5, 0xb6, 0x3e, 0xb8, 0x75, 0x11, 0xba, 0x2a, 0x41, 0x21, 0xab,
+	0xb6, 0xe8, 0xc2, 0xb5, 0xa0, 0x4b, 0x41, 0x82, 0xb8, 0x9f, 0x92, 0x4b, 0x3b, 0xa4, 0xc9, 0xc4,
+	0xce, 0xcd, 0xc2, 0xdf, 0xe1, 0x1f, 0x96, 0x79, 0x28, 0xd3, 0xbd, 0xab, 0x39, 0xf3, 0xdd, 0x17,
+	0xe7, 0xc0, 0xbc, 0x3f, 0x6a, 0xd6, 0xeb, 0x96, 0x8c, 0x91, 0x3b, 0x5a, 0xb9, 0x1f, 0x66, 0xee,
+	0x29, 0x1e, 0x61, 0xfa, 0x34, 0xf0, 0xbe, 0xa2, 0xcf, 0x81, 0x0c, 0x23, 0x42, 0xda, 0xc9, 0x96,
+	0x72, 0xb1, 0x14, 0xe5, 0x79, 0xe5, 0x34, 0xde, 0x40, 0xc6, 0xba, 0xa1, 0x2e, 0x4f, 0x1c, 0xf4,
+	0x9f, 0xe2, 0x16, 0x66, 0x7e, 0xd0, 0xf4, 0xba, 0x33, 0x51, 0x97, 0x88, 0xbb, 0xc6, 0x90, 0xbd,
+	0xb4, 0x3d, 0x7f, 0x15, 0x1f, 0x30, 0x79, 0x97, 0xa6, 0x79, 0xd6, 0x1d, 0xe1, 0x25, 0x24, 0xaa,
+	0x0e, 0x7d, 0x89, 0xaa, 0xff, 0x8e, 0x26, 0xd1, 0x51, 0x84, 0xb4, 0x96, 0x2c, 0xf3, 0x91, 0x67,
+	0x56, 0x5b, 0xc6, 0xaa, 0xa5, 0x3c, 0xf5, 0xcc, 0xea, 0xa2, 0x81, 0xa9, 0xdd, 0xfb, 0x36, 0x6c,
+	0x0f, 0xca, 0xec, 0xff, 0x73, 0x35, 0x5e, 0xc3, 0x88, 0xf9, 0x90, 0x67, 0x4b, 0x51, 0x5e, 0x54,
+	0x56, 0xde, 0x7f, 0x0b, 0x18, 0xbf, 0xfa, 0x14, 0x71, 0x0d, 0xa9, 0xf5, 0x8f, 0xe8, 0xf3, 0x5c,
+	0x45, 0x29, 0x2e, 0xe6, 0x27, 0x2c, 0x04, 0x74, 0x07, 0xa9, 0x73, 0x7f, 0x15, 0x8a, 0xbf, 0x71,
+	0x2c, 0x66, 0x01, 0xb8, 0xa0, 0x70, 0x03, 0x93, 0x8a, 0x76, 0xca, 0x30, 0x1d, 0xf1, 0xa4, 0xb2,
+	0xc0, 0x68, 0x30, 0xf8, 0x2d, 0xc5, 0x46, 0x6c, 0xcf, 0x1c, 0x7e, 0xf8, 0x09, 0x00, 0x00, 0xff,
+	0xff, 0xfa, 0xfe, 0xde, 0xd9, 0xe7, 0x01, 0x00, 0x00,
 }
