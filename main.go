@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-// VERSION iowa version
-const VERSION = "0.0.1"
+// Version iowa version
+const Version = "0.0.1"
 const port = ":50051"
 
 func main() {
