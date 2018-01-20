@@ -26,7 +26,8 @@ script:
   - go build
 
 after_script:
-  - ./cc-test-reporter after-build -t gcov --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter format-coverage --input-type gocov coverage.json
+  - ./cc-test-reporter upload-coverage
 
 notifications:
   email: false
