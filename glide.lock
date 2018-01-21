@@ -1,15 +1,18 @@
-hash: 7c725f4a350340f258ebfe605b5f8d1c75e98b60c39347a997dec5e490106921
-updated: 2018-01-17T03:47:22.236799+08:00
+hash: 6916df4ce6c48f3ef3da068f9242824ce8065667ca9933c21b312667e81013cc
+updated: 2018-01-21T22:06:34.631668+08:00
 imports:
 - name: github.com/golang/protobuf
   version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
   subpackages:
   - proto
   - protoc-gen-go
+  - protoc-gen-go/descriptor
   - ptypes
   - ptypes/any
   - ptypes/duration
   - ptypes/timestamp
+- name: github.com/jinzhu/gorm
+  version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
 - name: golang.org/x/net
   version: 5ccada7d0a7ba9aeb5d3aca8d3501b4c2a509fec
   subpackages:
@@ -32,7 +35,7 @@ imports:
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: 7cea4cc846bcf00cbb27595b07da5de875ef7de9
+  version: 6b51017f791ae1cfbec89c52efdf444b13b550ef
   repo: https://github.com/grpc/grpc-go
   subpackages:
   - balancer
@@ -49,6 +52,8 @@ imports:
   - metadata
   - naming
   - peer
+  - reflection
+  - reflection/grpc_reflection_v1alpha
   - resolver
   - resolver/dns
   - resolver/passthrough
