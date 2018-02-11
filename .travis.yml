@@ -1,39 +1,35 @@
-language: go
+language: ruby
 
-go:
-  - 1.8.x
-  - 1.9.x
+rvm: 2.3.5
+sudo: false
+matrix:
+  include:
+    - rvm: 2.3.5
+    - rvm: 2.4.2
+    - rvm: 2.5.0
+    - rvm: ruby-head
+  allow_failures:
+    - rvm: ruby-head
+  fast_finish: true
+
+os:
+  - linux
+
+addons:
+  apt:
+    packages:
+      - protobuf
 
 before_install:
-  - wget "https://github.com/Masterminds/glide/releases/download/v0.13.1/glide-v0.13.1-linux-amd64.tar.gz"
-  - mkdir -p $HOME/bin
-  - tar -vxz -C $HOME/bin --strip=1 -f glide-v0.13.1-linux-amd64.tar.gz
-  - export PATH="$HOME/bin:$PATH"
-
-install:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - go get -u github.com/golang/lint/golint
-  - go get github.com/axw/gocov/gocov
-  - glide install
-
-before_script:
-  - ./cc-test-reporter before-build
+  - gem install bundler
 
 script:
-  - golint `go list ./... | grep -v /vendor/`
-  - |
-    for pkg in $(go list ./... | grep -v vendor); do
-        go test -coverprofile=$(echo $pkg | tr / -).cover $pkg
-    done
-  - >-
-    echo "mode: set" > c.out
-  - grep -h -v "^mode:" ./*.cover >> c.out
-  - rm -f *.cover
-  - go build
+  - gem list -l
+  - bundle exec rake
+  - bundle exec codeclimate-test-reporter
+  - gem build ./iowa.gemspec
 
-after_script:
-  - ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
+bundler_args: --jobs 1 --retry 3
 
 notifications:
   email: false

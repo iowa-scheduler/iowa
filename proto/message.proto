@@ -1,24 +1,6 @@
 syntax = "proto3";
 
-// protoc --go_out=plugins=grpc:. proto/*.proto
-package proto;
-
-service Message {
-  rpc Auth (AuthRequest) returns (AuthResponse);
-  rpc Done (TaskDone) returns (Empty);
-  rpc Register (stream Empty) returns (stream TaskPublish);
-}
-
-message AuthRequest {
-  string name = 1;
-  string token = 2;
-}
-
-message AuthResponse {
-  string token = 1;
-}
-
-message Empty {}
+// protoc -I ./proto --ruby_out ./lib/iowa/protos proto/*.proto
 
 message TaskDone {
   string id = 1;
