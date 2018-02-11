@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 // protoc -I ./proto --ruby_out ./lib/iowa/protos proto/*.proto
+package proto;
 
 message TaskDone {
   string id = 1;

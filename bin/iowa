@@ -1,3 +1,8 @@
-# !/usr/bin/env ruby
+#!/usr/bin/env ruby
 
 require 'iowa'
+
+instance = Iowa::Boot.new([
+  [Iowa::Plugin::Server, '127.0.0.1', 1984],
+])
+instance.run
