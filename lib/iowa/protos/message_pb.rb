@@ -4,13 +4,13 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "TaskDone" do
+  add_message "proto.TaskDone" do
     optional :id, :string, 1
     optional :name, :string, 2
     optional :data, :string, 3
     optional :time, :string, 4
   end
-  add_message "TaskPublish" do
+  add_message "proto.TaskPublish" do
     optional :id, :string, 1
     optional :name, :string, 2
     optional :data, :string, 3
@@ -19,5 +19,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
 end
 
-TaskDone = Google::Protobuf::DescriptorPool.generated_pool.lookup("TaskDone").msgclass
-TaskPublish = Google::Protobuf::DescriptorPool.generated_pool.lookup("TaskPublish").msgclass
+module Proto
+  TaskDone = Google::Protobuf::DescriptorPool.generated_pool.lookup("proto.TaskDone").msgclass
+  TaskPublish = Google::Protobuf::DescriptorPool.generated_pool.lookup("proto.TaskPublish").msgclass
+end

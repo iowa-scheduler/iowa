@@ -20,6 +20,3 @@ require_relative 'iowa/routes/root'
 
 # Load modules
 require_relative 'iowa/plugins/server'
-
-# Run
-require_relative 'iowa/boot'
