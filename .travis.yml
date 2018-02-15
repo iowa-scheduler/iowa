@@ -15,6 +15,10 @@ matrix:
 os:
   - linux
 
+services:
+  - mysql
+  - redis-server
+
 env:
   - PATH=$HOME/protoc/bin:$PATH
 
@@ -26,8 +30,13 @@ install:
   - unzip /tmp/protoc.zip -d $HOME/protoc
   - bundle install
 
-script:
+before_script:
   - gem list -l
+  - mysql -e 'CREATE DATABASE iowa charset utf8mb4 COLLATE utf8mb4_unicode_ci;'
+  - bundle exec rake install
+  - iowa -m -s "root@127.0.0.1:3306/iowa"
+
+script:
   - bundle exec rake
   - bundle exec codeclimate-test-reporter
   - gem build ./iowa.gemspec

@@ -1,7 +1,47 @@
 #!/usr/bin/env ruby
 
-REDIS_URL = ENV['REDIS_URL'] || '127.0.0.1:6379'
-MYSQL_URL = ENV['MYSQL_URL'] || '127.0.0.1:3306'
+require 'optparse'
 
-require 'iowa'
-require 'iowa/boot'
+options = {
+  migrate: false,
+  redis: '127.0.0.1:6379',
+  mysql: 'root@127.0.0.1:3306/iowa',
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: iowa [options]"
+
+  opts.on('-m', '--migrate', 'Run migration') do |v|
+    options[:migrate] = v
+  end
+
+  opts.on('-r', '--redis Redis', 'Redis Connection Url') do |r|
+    options[:redis] = r
+  end
+
+  opts.on('-s', '--mysql MySQL', 'MySQL Connection Url') do |s|
+    options[:mysql] = s
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+REDIS_URL = options[:redis]
+MYSQL_URL = "mysql2://#{options[:mysql]}"
+
+if options[:migrate]
+  require 'sequel'
+  Sequel.extension :migration
+  DB = Sequel.connect(MYSQL_URL)
+  Sequel::Migrator.run(DB, "#{__dir__}/../lib/iowa/migrations")
+  version = if DB.tables.include?(:schema_info)
+    DB[:schema_info].first[:version]
+  end || 0
+  puts "Schema Version: #{version}"
+else
+  require 'iowa'
+  require 'iowa/boot'
+end
