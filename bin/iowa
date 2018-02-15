@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'iowa'
+REDIS_URL = ENV['REDIS_URL'] || '127.0.0.1:6379'
+MYSQL_URL = ENV['MYSQL_URL'] || '127.0.0.1:3306'
 
-instance = Iowa::Boot.new([
-  [Iowa::Plugin::Server, '127.0.0.1', 1984],
-])
-instance.run
+require 'iowa'

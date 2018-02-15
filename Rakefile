@@ -10,5 +10,5 @@ end
 
 task :install do
   puts `gem build iowa.gemspec`
-  puts `gem install ./iowa-#{Iowa::VERSION}.gem`
+  puts `gem install ./iowa-scheduler-#{Iowa::VERSION}.gem`
 end
