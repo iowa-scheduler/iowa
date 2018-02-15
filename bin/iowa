@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+REDIS_URL = ENV['REDIS_URL'] || '127.0.0.1:6379'
+MYSQL_URL = ENV['MYSQL_URL'] || '127.0.0.1:3306'
+
+require 'iowa'
+require 'iowa/boot'
