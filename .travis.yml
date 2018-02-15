@@ -1,7 +1,7 @@
 language: ruby
 
 rvm: 2.3.5
-sudo: false
+sudo: true
 matrix:
   include:
     - rvm: 2.3.5
@@ -15,13 +15,12 @@ matrix:
 os:
   - linux
 
-addons:
-  apt:
-    packages:
-      - protobuf
-
 before_install:
   - gem install bundler
+
+install:
+  - sudo apt update
+  - sudo apt install protobuf
 
 script:
   - gem list -l
