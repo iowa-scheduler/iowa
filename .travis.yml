@@ -32,8 +32,8 @@ install:
 
 before_script:
   - gem list -l
-  - bundle exec rake install
   - mysql -e 'CREATE DATABASE iowa charset utf8mb4 COLLATE utf8mb4_unicode_ci;'
+  - bundle exec rake install
   - iowa -m -s "root@127.0.0.1:3306/iowa"
 
 script:
